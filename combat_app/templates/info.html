@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    {% load static %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+        integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    <link href="https://unpkg.com/nes.css@latest/css/nes.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <title>
+        Combat Dojo! - INFO
+    </title>
+</head>
+
+<body>
+    <div class="row header mr-0 justify-content-center align-items-center">
+        <div class="col-12">
+            <h1>WELCOME TO COMBAT DOJO!</h1>
+            <p>"A retro turn-based combat game"</p>
+        </div>
+    </div>
+    </div>
+
+    <div class="row action mr-0 justify-content-start">
+        <div class="col-12">
+            <h2>About the Game:</h2>
+            <h3>Fighters are rated on a scale of 1-20 in combat attributes:</h3>
+            <ul class="list-unstyled pl-4">
+                <li>PWR (Power) - The level of damage an attack a fighter can inflict.</li>
+                <li>ATT (Attack) - The overall quality of a fighter's attack ability.</li>
+                <li>DEF (Defense) - The overall quality of a fighter's defense ability.</li>
+                <li>SPD (Speed) - Factors into a fighter's ability to attack and defend quickly. </li>
+                <li>AGL (Agility) - The fighter's ability to avoid attacks. </li>
+                <li>RCV (Recovery) - The fighter's ability to regain Health throughout the fight.</li>
+            </ul>
+            <h3>Fighters take turns attacking and defending. The game ends when a fighter has 0 Health, or whoever has
+                the
+                most health after 40 rounds.</h3>
+        </div>
+    </div>
+
+    <div class="row update mr-0 justify-content-start">
+        <div class="col-12">
+            <h2>Gameplay:</h2>
+            <h3>Each round, you will either ATTACK or DEFEND by selecting a technique and pressing the GO button.</h3>
+            <ul class="list-unstyled pl-4">
+                <li>*** ATTACK TECHNIQUES ***
+                    <ul class="list-unstyled pl-4">
+                        <li>QUICK - Less damage but higher chance of success.</li>
+                        <li>NORMAL - Average damage and success rate.</li>
+                        <li>STRONG - Higher damage but less chance of success.</li>
+                    </ul>
+                </li>
+                <li>*** DEFENSE TECHNIQUES ***
+                    <ul class="list-unstyled pl-4">
+                        <li>DODGE - Evade an attack with less than average Health recovery.</li>
+                        <li>BLOCK - Block an attack with average Health recovery.</li>
+                        <li>COUNTER - Counter an attack with minimal Health recovery while also inflicting damage to the
+                            attacker.</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row footer mr-0 justify-content-between">
+
+        <a href="/select" class="nes-btn is-success select-fighter-btn">Select
+            Fighter!</a>
+
+        <a href="/" class="nes-btn is-error quit-btn">QUIT</a>
+        </form>
+    </div>
+</body>
+
+</html>

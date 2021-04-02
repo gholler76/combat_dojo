@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    {% load static %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+        integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    <link href="https://unpkg.com/nes.css@latest/css/nes.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <title>
+        Combat Dojo! - HOME
+    </title>
+</head>
+
+<body>
+    <div class="row header mr-0">
+        <p>version {{ version }}</p>
+    </div>
+
+    <div class="row action mr-0">
+        <img src="/static/img/cd_logo-800.png" alt="Coding Dojo Logo">
+    </div>
+
+    <div class="row update mr-0 justify-content-center align-content-center">
+
+        <a href="/info" class="nes-btn is-warning enter-dojo-btn align-middle">Enter the
+            Dojo!</a>
+
+    </div>
+    <div class="row footer mr-0">
+
+    </div>
+</body>
+
+</html>

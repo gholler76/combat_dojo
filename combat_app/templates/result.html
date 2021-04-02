@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    {% load static %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+        integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    <link href="https://unpkg.com/nes.css@latest/css/nes.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <title>
+        Combat Dojo! - RESULT
+    </title>
+</head>
+
+<body>
+    <div class="row header mr-0 justify-content-center">
+        <h1>WINNER!!!</h1>
+    </div>
+
+    <div class="row action justify-content-center">
+        <img src="/static/img/{{ winner }}L.png" alt="{{ winner }}">
+    </div>
+
+    <div class="row update p-0">
+        <div class="col-12 p-0 d-flex justify-content-center">
+            <h1 class="result">{{ name }}</h1>
+        </div>
+        <div class="col-12 p-0 d-flex justify-content-center">
+            <a href="/select" class="nes-btn is-success select-fighter-btn ">Play Again!</a>
+        </div>
+    </div>
+
+    <div class="row footer mr-0 justify-content-end">
+        <a href="/" class="nes-btn is-error quit-btn">QUIT</a>
+    </div>
+</body>
+
+</html>
