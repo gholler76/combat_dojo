@@ -6,7 +6,7 @@ import math
 
 def home(request):
     context = {
-        'version': 1.0
+        'version': 1.1
     }
     return render(request, "home.html", context)
 
@@ -85,29 +85,9 @@ def fight(request):
 
 
 def fight_advance(request):
-    this_fight = combat_models.ActiveFight.objects.get(id=1)
-    health = combat_models.FighterHealth.objects.all()
-    action = combat_models.FightAction.objects.get(id=1)
-    print('***********defender', action.defender)
-    # manually assigned here but will be attribute-based depending on technique
-    defender = action.defender
-    attacker = action.attacker
-    attacker_val = 22
-    defender_val = 11
-    # roll determines if attacker or defender wins round
-    roll = random.randint(1, attacker_val+defender_val)
-    print('**************roll', roll)
-    damage = 20
-    recovery = 5
-    defender_health = health.get(fighter=defender)
-    if roll <= attacker_val:
-        defender_health.health = max(defender_health.health - damage, 0)
-        defender_health.save()
-    else:
-        defender_health.health = min(defender_health.health + recovery, 100)
-        defender_health.save()
-    this_fight.fight_round = this_fight.fight_round + 1
-    this_fight.save()
+    advance = combat_models.ActiveFight.objects.all()
+    advance.round_result()
+
     return redirect('/fight')
 
 

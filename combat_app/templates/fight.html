@@ -24,6 +24,14 @@
 
     <div class="row action fight mr-0 p-0 justify-content-center">
         <div class="col d-flex justify-content-end">
+            <div class="text-wrap align-items-center">
+                <h1 class="action-text">You are now on the</h1>
+                {% if fight.fighter1.id == attacker %}
+                <h1 class="attack">ATTACK</h1>
+                {% else %}
+                <h1 class="defense">DEFENSE</h1>
+                {% endif %}
+            </div>
             <div class="card fight">
                 <img class="card-img-top fight" src="/static/img/{{ fight.fighter1_id }}L.png" alt="Card image cap">
                 <div class="card-header text-center pt-1">
@@ -56,11 +64,12 @@
     <div class="row update fight mt-4 justify-content-center p-0">
         <form action="/fight_advance" method="POST" class="form-inline w-100">
             {% csrf_token %}
-            <!-- <div class="col-4 d-flex">
+            {% if fight.fighter1.id == attacker %}
+            <div class="col-4 d-flex">
                 <label for="error_select">
-                    <h2>Choose an Attack</h2>:
+                    <h2>Choose an Attack: </h2>
                 </label>
-                <div class="nes-select is-error mb-4 tech">
+                <div class="nes-select is-success mb-4 tech">
                     <select required id="error_select" name="fighter1">
                         <option value="" disabled selected hidden>Select...</option>
                         <option value="1">Quick</option>
@@ -68,12 +77,15 @@
                         <option value="3">Strong</option>
                     </select>
                 </div>
-            </div> -->
+            </div>
             <div class="col-4 p-0 text-center">
                 <button src="/static/img/fist.png" type="submit" class="nes-btn go-btn"></button>
             </div>
-            <!-- <div class="col-4">
-                <label for="error_select">Choose a Defense:</label>
+            {% else %}
+            <div class="col-4 d-flex">
+                <label for="error_select">
+                    <h2>Choose a Defense: </h2>
+                </label>
                 <div class="nes-select is-error mb-4 tech">
                     <select required id="error_select" name="fighter2">
                         <option value="" disabled selected hidden>Select...</option>
@@ -82,7 +94,11 @@
                         <option value="3">Counter</option>
                     </select>
                 </div>
-            </div> -->
+            </div>
+            <div class="col-4 p-0 text-center">
+                <button src="/static/img/fist.png" type="submit" class="nes-btn go-btn"></button>
+            </div>
+            {% endif %}
         </form>
     </div>
 

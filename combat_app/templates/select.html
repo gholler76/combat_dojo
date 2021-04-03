@@ -9,6 +9,7 @@
         integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
     <link href="https://unpkg.com/nes.css@latest/css/nes.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <!-- <script type="text/javascript" src="{% static 'js/scripts.js' %}"></script> -->
 
     <title>
         Combat Dojo! - SELECT FIGHTER
@@ -16,6 +17,8 @@
 </head>
 
 <body>
+
+
     <div class="row header mr-0 justify-content-center align-items-center text-center">
         <div class="col-12">
             <h1>SELECT FIGHTER</h1>
@@ -134,18 +137,18 @@
         <div class="col-6">
             <form action="/fight_start" method="POST">
                 {% csrf_token %}
-                <label for="error_select" class="select">Select Your Fighter:</label>
+                <label for="player_select" class="select">Select Your Fighter:</label>
                 <div class="nes-select is-error mb-4">
-                    <select required id="error_select" name="fighter1">
+                    <select id="player_select" name="fighter1">
                         <option value="" disabled selected hidden>Select...</option>
                         {% for fighter in fighters %}
                         <option value="{{ fighter.id }}">{{ fighter.fighter_type}}</option>
                         {% endfor %}
                     </select>
                 </div>
-                <label for="error_select" class="select">Select CPU Fighter:</label>
+                <label for="cpu_select" class="select">Select CPU Fighter:</label>
                 <div class="nes-select is-error mb-4">
-                    <select required id="error_select" name="fighter2">
+                    <select id="cpu_select" name="fighter2">
                         <option value="" disabled selected hidden>Select...</option>
                         {% for fighter in fighters %}
                         <option value="{{ fighter.id }}">{{ fighter.fighter_type}}</option>
@@ -162,6 +165,29 @@
         <a href="/" class="nes-btn is-error quit-btn">QUIT</a>
 
     </div>
+
+    <script>
+        $("select").change(function () {
+
+            $("select option").attr("disabled", ""); //enable everything
+            DisableOptions(); //disable selected values
+
+        });
+
+
+        function DisableOptions() {
+            var arr = [];
+            $("select option:selected").each(function () {
+                arr.push($(this).val());
+            });
+
+            $("select option").filter(function () {
+
+                return $.inArray($(this).val(), arr) > -1;
+            }).attr("disabled", "disabled");
+
+        }
+    </script>
 </body>
 
 </html>
