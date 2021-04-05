@@ -45,7 +45,12 @@
         <div class="col d-flex align-items-center">
             <div class="nes-container with-title is-centered fight-log d-block">
                 <p class="title">Round Result</p>
-                <p>Update attack result and any health updates</p>
+                <p>{% if messages %}
+                    {% for message in messages %}
+                    {{ message }}
+                    {% endfor %}
+                    {% endif %}
+                </p>
             </div>
         </div>
         <div class="col d-flex justify-content-left">
@@ -66,11 +71,11 @@
             {% csrf_token %}
             {% if fight.fighter1.id == attacker %}
             <div class="col-4 d-flex">
-                <label for="error_select">
+                <label for="attack_select">
                     <h2>Choose an Attack: </h2>
                 </label>
                 <div class="nes-select is-success mb-4 tech">
-                    <select required id="error_select" name="fighter1">
+                    <select id="attack_select" name="attack_select">
                         <option value="" disabled selected hidden>Select...</option>
                         <option value="1">Quick</option>
                         <option value="2">Normal</option>
@@ -83,11 +88,11 @@
             </div>
             {% else %}
             <div class="col-4 d-flex">
-                <label for="error_select">
+                <label for="defense_select">
                     <h2>Choose a Defense: </h2>
                 </label>
                 <div class="nes-select is-error mb-4 tech">
-                    <select required id="error_select" name="fighter2">
+                    <select id="defense_select" name="defense_select">
                         <option value="" disabled selected hidden>Select...</option>
                         <option value="1">Dodge</option>
                         <option value="2">Block</option>

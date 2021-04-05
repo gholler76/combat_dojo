@@ -2,6 +2,7 @@ from django.shortcuts import HttpResponse, redirect, render
 from combat_app import models as combat_models
 import random
 import math
+from django.contrib import messages
 
 
 def home(request):
@@ -22,6 +23,11 @@ def select(request):
         'fighters': fighters,
     }
     return render(request, "select.html", context)
+
+
+def generate_select(request, uid):
+    other_fighters = combat_models.Fighter.objects.exclude(id=uid)
+    return render(request, 'partial.html', {'other_fighters': other_fighters})
 
 
 def fight_start(request):
@@ -85,9 +91,9 @@ def fight(request):
 
 
 def fight_advance(request):
-    advance = combat_models.ActiveFight.objects.all()
-    advance.round_result()
-
+    round_advance = combat_models.ActiveFight.objects.round_result(
+        request.POST)
+    messages.info(request, round_advance)
     return redirect('/fight')
 
 

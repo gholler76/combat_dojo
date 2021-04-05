@@ -9,8 +9,7 @@
         integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
     <link href="https://unpkg.com/nes.css@latest/css/nes.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <!-- <script type="text/javascript" src="{% static 'js/scripts.js' %}"></script> -->
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <title>
         Combat Dojo! - SELECT FIGHTER
     </title>
@@ -166,28 +165,15 @@
 
     </div>
 
-    <script>
-        $("select").change(function () {
-
-            $("select option").attr("disabled", ""); //enable everything
-            DisableOptions(); //disable selected values
-
-        });
-
-
-        function DisableOptions() {
-            var arr = [];
-            $("select option:selected").each(function () {
-                arr.push($(this).val());
-            });
-
-            $("select option").filter(function () {
-
-                return $.inArray($(this).val(), arr) > -1;
-            }).attr("disabled", "disabled");
-
-        }
-    </script>
 </body>
+<script>
+    $('#player_select').change(function () {
+        let id = $(this).val();
+        // send a get request to the url '/user/<int:uid>/exclude'
+        $.get(`/fighter/${id}/exclude`, function (data) {
+            $('#cpu_select').html(data);
+        });
+    });
+</script>
 
 </html>

@@ -1,11 +1,18 @@
 from django.db import models
 from django.db.models.functions import Ceil
+import random
+from django.contrib import messages
+from django.urls import reverse
+from django.http import HttpRequest
 
 
 class FightManager (models.Manager):
 
     def get_queryset(self):
         return super(FightManager, self).get_queryset().defer(None)
+
+    def get_absolute_url(self):
+        return reverse('fight_advance', args=[str(self.id)])
 
     def round_count(self):
         error = {}
@@ -14,9 +21,11 @@ class FightManager (models.Manager):
             return error
 
     def round_result(self, post_data):
-        this_fight = combat_models.ActiveFight.objects.get(id=1)
-        health = combat_models.FighterHealth.objects.all()
-        action = combat_models.FightAction.objects.get(id=1)
+        round_result = ""
+        this_fight = ActiveFight.objects.get(id=1)
+        health = FighterHealth.objects.all()
+        action = FightAction.objects.get(id=1)
+        fighter = Fighter.objects.all()
         # manually assigned here but will be attribute-based depending on technique
         defender = action.defender
         attacker = action.attacker
@@ -31,12 +40,16 @@ class FightManager (models.Manager):
             defender_health.health = max(
                 defender_health.health - damage, 0)
             defender_health.save()
+            # round_result = f'The {fighter.fighter_type.id=attacker} attack was successful!'
         else:
             defender_health.health = min(
                 defender_health.health + recovery, 100)
             defender_health.save()
+            # round_result = f'The {fighter.fighter_type.id=defender} defense was successful!'
             this_fight.fight_round = this_fight.fight_round + 1
-            this_fight.save()
+        this_fight.save()
+
+        return round_result
 
 
 class Fighter(models.Model):

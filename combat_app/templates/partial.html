@@ -1,0 +1,6 @@
+<select>
+    <option value="">Select...</option>
+    {% for fighter in other_fighters %}
+    <option value="{{ fighter.id }}">{{ fighter.fighter_type }}</option>
+    {% endfor %}
+</select>

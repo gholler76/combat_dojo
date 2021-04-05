@@ -6,6 +6,7 @@ urlpatterns = [
     path('', views.home),
     path('info', views.info),
     path('select', views.select),
+    path('fighter/<int:uid>/exclude', views.generate_select),
     path('fight_start', views.fight_start),
     path('fight', views.fight),
     path('fight_advance', views.fight_advance),
