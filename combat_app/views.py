@@ -7,7 +7,7 @@ from django.contrib import messages
 
 def home(request):
     context = {
-        'version': 1.2
+        'version': 1.4
     }
     return render(request, "home.html", context)
 
@@ -39,14 +39,34 @@ def fight_start(request):
 def fight(request):
     this_fight = combat_models.ActiveFight.objects.get(id=1)
     health = combat_models.FighterHealth.objects.all()
+    fighter = combat_models.Fighter.objects.all()
     if this_fight.fight_active == True:
         print('************fight round', this_fight.fight_round)
         if this_fight.fight_round > 40:
             return redirect('/result')
-        # assigns attacker to fighter2 in even rounds
-        # current base model - will update to attribute-weighted roll
         else:
-            if this_fight.fight_round % 2 == 1:
+            # uses weighted roll to choose first attacker based on attributes
+            f1_speed = this_fight.fighter1.speed
+            f1_attack = this_fight.fighter1.attack
+            f1_agility = this_fight.fighter1.agility
+            f2_speed = this_fight.fighter2.speed
+            f2_attack = this_fight.fighter2.attack
+            f2_agility = this_fight.fighter2.agility
+            speed_mod = combat_models.FirstAttack.objects.get(id=1).speed_mod
+            attack_mod = combat_models.FirstAttack.objects.get(id=1).attack_mod
+            agility_mod = combat_models.FirstAttack.objects.get(
+                id=1).agility_mod
+            fighter1_first_att_val = math.ceil(f1_speed * speed_mod +
+                                               f1_attack * attack_mod + f1_agility * agility_mod)
+            fighter2_first_att_val = math.ceil(f2_speed * speed_mod +
+                                               f2_attack * attack_mod + f2_agility * agility_mod)
+            first_attack_roll = random.randint(
+                1, fighter1_first_att_val+fighter2_first_att_val)
+            print("*****fighter 1 first attack value>>>", fighter1_first_att_val)
+            print("*****fighter 2 first attack value>>>", fighter2_first_att_val)
+            print("*****first attack roll>>>", first_attack_roll)
+
+            if this_fight.fight_round % 2 == 1:  # new logic will go in this line
                 assign_action = combat_models.FightAction.objects.get(id=1)
                 assign_action.attacker = this_fight.fighter1_id
                 assign_action.defender = this_fight.fighter2_id
