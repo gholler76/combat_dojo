@@ -31,25 +31,8 @@ def generate_select(request, uid):
 
 
 def fight_start(request):
-    # reset ActiveFight for new fight
-    this_fight = combat_models.ActiveFight.objects.get(id=1)
-    health = combat_models.FighterHealth.objects.all()
-    this_fight.fighter1 = combat_models.Fighter.objects.get(
-        id=request.POST['fighter1'])
-    this_fight.fighter2 = combat_models.Fighter.objects.get(
-        id=request.POST['fighter2'])
-    this_fight.fight_round = 1
-    this_fight.fight_active = True
-    this_fight.save()
-    health_fighter1 = health.get(id=1)
-    health_fighter1.fighter = request.POST['fighter1']
-    health_fighter1.health = 100
-    health_fighter1.save()
-    health_fighter2 = health.get(id=2)
-    health_fighter2.fighter = request.POST['fighter2']
-    health_fighter2.health = 100
-    health_fighter2.save()
-
+    start_fight = combat_models.ActiveFight.objects.start_fight(
+        request.POST)
     return redirect("/fight")
 
 

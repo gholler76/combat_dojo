@@ -20,6 +20,26 @@ class FightManager (models.Manager):
             error['round_limit'] = "Fight is over"
             return error
 
+    def start_fight(self, post_data):
+        # reset ActiveFight for new fight after fighter select
+        this_fight = ActiveFight.objects.get(id=1)
+        health = FighterHealth.objects.all()
+        this_fight.fighter1 = Fighter.objects.get(
+            id=post_data['fighter1'])
+        this_fight.fighter2 = Fighter.objects.get(
+            id=post_data['fighter2'])
+        this_fight.fight_round = 1
+        this_fight.fight_active = True
+        this_fight.save()
+        health_fighter1 = health.get(id=1)
+        health_fighter1.fighter = post_data['fighter1']
+        health_fighter1.health = 100
+        health_fighter1.save()
+        health_fighter2 = health.get(id=2)
+        health_fighter2.fighter = post_data['fighter2']
+        health_fighter2.health = 100
+        health_fighter2.save()
+
     def round_result(self, post_data, request):
         # set round data
         this_fight = ActiveFight.objects.get(id=1)
