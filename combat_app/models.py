@@ -4,24 +4,17 @@ import random
 from django.contrib import messages
 from django.urls import reverse
 from django.http import HttpRequest
+import decimal
 
 
 class FightManager (models.Manager):
 
-    def get_queryset(self):
-        return super(FightManager, self).get_queryset().defer(None)
-
     def get_absolute_url(self):
         return reverse('fight_advance', args=[str(self.id)])
 
-    def round_count(self):
-        error = {}
-        if ActiveFight.fight_round > 40:
-            error['round_limit'] = "Fight is over"
-            return error
-
-    def start_fight(self, post_data):
+    def start_fight(self, post_data, request):
         # reset ActiveFight for new fight after fighter select
+        messages.info(request, "Prepare for Combat!!!")
         this_fight = ActiveFight.objects.get(id=1)
         health = FighterHealth.objects.all()
         this_fight.fighter1 = Fighter.objects.get(
@@ -39,6 +32,35 @@ class FightManager (models.Manager):
         health_fighter2.fighter = post_data['fighter2']
         health_fighter2.health = 100
         health_fighter2.save()
+        # uses weighted roll to choose first attacker based on attributes
+        f1_speed = this_fight.fighter1.speed
+        f1_attack = this_fight.fighter1.attack
+        f1_agility = this_fight.fighter1.agility
+        f2_speed = this_fight.fighter2.speed
+        f2_attack = this_fight.fighter2.attack
+        f2_agility = this_fight.fighter2.agility
+        speed_mod = FirstAttack.objects.get(id=1).speed_mod
+        attack_mod = FirstAttack.objects.get(id=1).attack_mod
+        agility_mod = FirstAttack.objects.get(
+            id=1).agility_mod
+        fighter1_first_att_val = math.ceil(f1_speed * speed_mod +
+                                           f1_attack * attack_mod + f1_agility * agility_mod)
+        fighter2_first_att_val = math.ceil(f2_speed * speed_mod +
+                                           f2_attack * attack_mod + f2_agility * agility_mod)
+        first_attack_roll = random.randint(
+            1, fighter1_first_att_val+fighter2_first_att_val)
+        if first_attack_roll <= fighter1_first_att_val:
+            assign_action = FightAction.objects.get(id=1)
+            assign_action.attacker = this_fight.fighter1_id
+            assign_action.defender = this_fight.fighter2_id
+            assign_action.save()
+        else:
+            assign_action = FightAction.objects.get(id=1)
+            assign_action.attacker = this_fight.fighter2_id
+            assign_action.defender = this_fight.fighter1_id
+            assign_action.save()
+
+        return request
 
     def round_result(self, post_data, request):
         # set round data
@@ -51,9 +73,9 @@ class FightManager (models.Manager):
         player = post_data["player"]
         tech = post_data["technique"]
 
-        # set technique value for attack and defense
-        # if no value in POST, assign CPU technique with random
+        # set technique value selected by player, assign random selection to CPU
         this_attacker = Fighter.objects.all().get(id=attacker)
+        # call base volues and mods
         power = this_attacker.power
         a_speed = this_attacker.speed
         attack = this_attacker.attack
@@ -80,11 +102,10 @@ class FightManager (models.Manager):
         dd_defense = TechniqueMod.objects.get(id=1).dd_defense
         nd_defense = TechniqueMod.objects.get(id=1).nd_defense
         cd_defense = TechniqueMod.objects.get(id=1).cd_defense
-
+        # assign attack or defense to player, vice versa for CPU
         if player == "attack":
             attack_tech = tech
             defense_tech = random.randint(1, 3)
-
             if attack_tech == 1:
                 this_attack = math.ceil(power * qa_power + a_speed *
                                         qa_speed + attack * qa_attack)
@@ -94,7 +115,6 @@ class FightManager (models.Manager):
             else:
                 this_attack = math.ceil(power * sa_power + a_speed *
                                         sa_speed + attack * sa_attack)
-
             if defense_tech == 1:
                 this_defense = math.ceil(d_speed * dd_speed + agility *
                                          dd_agility + defense * dd_defense)
@@ -104,10 +124,10 @@ class FightManager (models.Manager):
             else:
                 this_defense = math.ceil(d_speed * cd_speed + agility *
                                          cd_agility + defense * cd_defense)
+        # switch player to defense if not attack
         else:
             defense_tech = tech
             attack_tech = random.randint(1, 3)
-
             if defense_tech == 1:
                 this_defense = math.ceil(d_speed * dd_speed + agility *
                                          dd_agility + defense * dd_defense)
@@ -117,7 +137,6 @@ class FightManager (models.Manager):
             else:
                 this_defense = math.ceil(d_speed * cd_speed + agility *
                                          cd_agility + defense * cd_defense)
-
             if attack_tech == 1:
                 this_attack = math.ceil(power * qa_power + a_speed *
                                         qa_speed + attack * qa_attack)
@@ -127,13 +146,25 @@ class FightManager (models.Manager):
             else:
                 this_attack = math.ceil(power * sa_power + a_speed *
                                         sa_speed + attack * sa_attack)
-
+        # after round values for att/def are established, dice roll to see who wins
         attacker_val = this_attack
         defender_val = this_defense
-
         roll = random.randint(1, attacker_val+defender_val)
-        damage = 20
-        recovery = 5
+        # load base combat values
+        base_recovery = Base.objects.get(id=1).base_recovery
+        base_miss = Base.objects.get(id=1).base_miss
+        base_damage = Base.objects.get(id=1).base_damage
+        base_parry = Base.objects.get(id=1).base_parry
+        # load techniques used in the round
+        damage_mod = Attack.objects.get(id=attack_tech).damage_mod
+        recovery_mod = Defense.objects.get(id=defense_tech).recovery_mod
+        # apply modifiers to base damage and recovery values based on who won the roll
+        r_max = 20
+        defender_recovery = this_defender.recovery
+        damage = math.ceil(
+            base_damage*(damage_mod * decimal.Decimal("{:.2f}".format(power/r_max))))
+        recovery = math.ceil(
+            base_recovery * (recovery_mod * decimal.Decimal("{:.2f}".format(defender_recovery/r_max))))
         defender_health = health.get(fighter=defender)
         if roll <= attacker_val:
             defender_health.health = max(
@@ -145,9 +176,16 @@ class FightManager (models.Manager):
                 defender_health.health + recovery, 100)
             defender_health.save()
             messages.info(request, "Defense was successful!")
+        # advance round by 1
         this_fight.fight_round = this_fight.fight_round + 1
         this_fight.save()
-
+        # flip attacker and defendee for next round
+        new_attacker = action.defender
+        new_defender = action.attacker
+        action.attacker = new_attacker
+        action.save()
+        action.defender = new_defender
+        action.save()
         return request
 
 # game models

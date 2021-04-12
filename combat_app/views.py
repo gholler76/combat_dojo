@@ -7,8 +7,9 @@ from django.contrib import messages
 
 def home(request):
     context = {
-        'version': 1.4
+        'version': 1.5
     }
+    print("IP Address for debug-toolbar: " + request.META['REMOTE_ADDR'])
     return render(request, "home.html", context)
 
 
@@ -32,70 +33,45 @@ def generate_select(request, uid):
 
 def fight_start(request):
     start_fight = combat_models.ActiveFight.objects.start_fight(
-        request.POST)
+        request.POST, request)
     return redirect("/fight")
 
 
 def fight(request):
     this_fight = combat_models.ActiveFight.objects.get(id=1)
     health = combat_models.FighterHealth.objects.all()
+    role = combat_models.FightAction.objects.get(id=1)
     fighter = combat_models.Fighter.objects.all()
     if this_fight.fight_active == True:
         print('************fight round', this_fight.fight_round)
         if this_fight.fight_round > 40:
             return redirect('/result')
-        else:
-            # uses weighted roll to choose first attacker based on attributes
-            f1_speed = this_fight.fighter1.speed
-            f1_attack = this_fight.fighter1.attack
-            f1_agility = this_fight.fighter1.agility
-            f2_speed = this_fight.fighter2.speed
-            f2_attack = this_fight.fighter2.attack
-            f2_agility = this_fight.fighter2.agility
-            speed_mod = combat_models.FirstAttack.objects.get(id=1).speed_mod
-            attack_mod = combat_models.FirstAttack.objects.get(id=1).attack_mod
-            agility_mod = combat_models.FirstAttack.objects.get(
-                id=1).agility_mod
-            fighter1_first_att_val = math.ceil(f1_speed * speed_mod +
-                                               f1_attack * attack_mod + f1_agility * agility_mod)
-            fighter2_first_att_val = math.ceil(f2_speed * speed_mod +
-                                               f2_attack * attack_mod + f2_agility * agility_mod)
-            first_attack_roll = random.randint(
-                1, fighter1_first_att_val+fighter2_first_att_val)
-            print("*****fighter 1 first attack value>>>", fighter1_first_att_val)
-            print("*****fighter 2 first attack value>>>", fighter2_first_att_val)
-            print("*****first attack roll>>>", first_attack_roll)
-
-            if this_fight.fight_round % 2 == 1:  # new logic will go in this line
-                assign_action = combat_models.FightAction.objects.get(id=1)
-                assign_action.attacker = this_fight.fighter1_id
-                assign_action.defender = this_fight.fighter2_id
-                assign_action.save()
-            else:
-                assign_action = combat_models.FightAction.objects.get(id=1)
-                assign_action.attacker = this_fight.fighter2_id
-                assign_action.defender = this_fight.fighter1_id
-                assign_action.save()
-        print('**********attacker', assign_action.attacker)
-        print('**********defender', assign_action.defender)
-        # context used to provide fighter role each round and update health
-        if health.get(id=1).health == 0 or health.get(id=2).health == 0:
+        elif health.get(id=1).health == 0 or health.get(id=2).health == 0:
             return redirect('/result')
-        context = {
-            'fight': this_fight,
-            'attacker': assign_action.attacker,
-            'defender': assign_action.defender,
-            'health_fighter1': health.get(id=1),
-            'health_fighter2': health.get(id=2)
-        }
-        return render(request, 'fight.html', context)
+        else:
+            context = {
+                'fight': this_fight,
+                'attacker': role.attacker,
+                'defender': role.defender,
+                'health_fighter1': health.get(id=1),
+                'health_fighter2': health.get(id=2)
+            }
+            return render(request, 'fight.html', context)
     else:
-        return redirect('/result')
+        return redirect('/select')
 
 
 def fight_advance(request):
     round_advance = combat_models.ActiveFight.objects.round_result(
         request.POST, request)
+    round_info = combat_models.ActiveFight.objects.round_result
+    print("*****Attacker>>>", round_info.attacker,
+          "*****Defender>>>", round_info.defender)
+    print("*****Attacker Tech>>>", round_info.attack_tech,
+          "*****Defender Tech>>>", round_info.defense_tech)
+    print("*****Attacker Value>>>", round_info.this_attack,
+          "*****Defender Value>>>", round_info.this_defense)
+    print("*****Damage>>>", round_info.damage)
     return redirect('/fight')
 
 
