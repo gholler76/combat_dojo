@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models.functions import Ceil
+import math
 import random
 from django.contrib import messages
 from django.urls import reverse
@@ -20,18 +20,97 @@ class FightManager (models.Manager):
             error['round_limit'] = "Fight is over"
             return error
 
-    def round_result(self, post_data):
-        round_result = ""
+    def round_result(self, post_data, request):
+        # set round data
         this_fight = ActiveFight.objects.get(id=1)
         health = FighterHealth.objects.all()
-        action = FightAction.objects.get(id=1)
         fighter = Fighter.objects.all()
-        # manually assigned here but will be attribute-based depending on technique
+        action = FightAction.objects.get(id=1)
         defender = action.defender
         attacker = action.attacker
-        attacker_val = 22
-        defender_val = 11
-        # roll determines if attacker or defender wins round
+        player = post_data["player"]
+        tech = post_data["technique"]
+
+        # set technique value for attack and defense
+        # if no value in POST, assign CPU technique with random
+        this_attacker = Fighter.objects.all().get(id=attacker)
+        power = this_attacker.power
+        a_speed = this_attacker.speed
+        attack = this_attacker.attack
+        this_defender = Fighter.objects.all().get(id=defender)
+        d_speed = this_defender.speed
+        agility = this_defender.agility
+        defense = this_defender.defense
+        this_defender = Fighter.objects.all().get(id=defender)
+        qa_power = TechniqueMod.objects.get(id=1).qa_power
+        na_power = TechniqueMod.objects.get(id=1).na_power
+        sa_power = TechniqueMod.objects.get(id=1).sa_power
+        qa_speed = TechniqueMod.objects.get(id=1).qa_speed
+        na_speed = TechniqueMod.objects.get(id=1).na_speed
+        sa_speed = TechniqueMod.objects.get(id=1).sa_speed
+        qa_attack = TechniqueMod.objects.get(id=1).qa_attack
+        na_attack = TechniqueMod.objects.get(id=1).na_attack
+        sa_attack = TechniqueMod.objects.get(id=1).sa_attack
+        dd_speed = TechniqueMod.objects.get(id=1).dd_speed
+        nd_speed = TechniqueMod.objects.get(id=1).nd_speed
+        cd_speed = TechniqueMod.objects.get(id=1).cd_speed
+        dd_agility = TechniqueMod.objects.get(id=1).dd_agility
+        nd_agility = TechniqueMod.objects.get(id=1).nd_agility
+        cd_agility = TechniqueMod.objects.get(id=1).cd_agility
+        dd_defense = TechniqueMod.objects.get(id=1).dd_defense
+        nd_defense = TechniqueMod.objects.get(id=1).nd_defense
+        cd_defense = TechniqueMod.objects.get(id=1).cd_defense
+
+        if player == "attack":
+            attack_tech = tech
+            defense_tech = random.randint(1, 3)
+
+            if attack_tech == 1:
+                this_attack = math.ceil(power * qa_power + a_speed *
+                                        qa_speed + attack * qa_attack)
+            elif attack_tech == 2:
+                this_attack = math.ceil(power * na_power + a_speed *
+                                        na_speed + attack * na_attack)
+            else:
+                this_attack = math.ceil(power * sa_power + a_speed *
+                                        sa_speed + attack * sa_attack)
+
+            if defense_tech == 1:
+                this_defense = math.ceil(d_speed * dd_speed + agility *
+                                         dd_agility + defense * dd_defense)
+            elif defense_tech == 2:
+                this_defense = math.ceil(d_speed * nd_speed + agility *
+                                         nd_agility + defense * nd_defense)
+            else:
+                this_defense = math.ceil(d_speed * cd_speed + agility *
+                                         cd_agility + defense * cd_defense)
+        else:
+            defense_tech = tech
+            attack_tech = random.randint(1, 3)
+
+            if defense_tech == 1:
+                this_defense = math.ceil(d_speed * dd_speed + agility *
+                                         dd_agility + defense * dd_defense)
+            elif defense_tech == 2:
+                this_defense = math.ceil(d_speed * nd_speed + agility *
+                                         nd_agility + defense * nd_defense)
+            else:
+                this_defense = math.ceil(d_speed * cd_speed + agility *
+                                         cd_agility + defense * cd_defense)
+
+            if attack_tech == 1:
+                this_attack = math.ceil(power * qa_power + a_speed *
+                                        qa_speed + attack * qa_attack)
+            elif attack_tech == 2:
+                this_attack = math.ceil(power * na_power + a_speed *
+                                        na_speed + attack * na_attack)
+            else:
+                this_attack = math.ceil(power * sa_power + a_speed *
+                                        sa_speed + attack * sa_attack)
+
+        attacker_val = this_attack
+        defender_val = this_defense
+
         roll = random.randint(1, attacker_val+defender_val)
         damage = 20
         recovery = 5
@@ -40,16 +119,18 @@ class FightManager (models.Manager):
             defender_health.health = max(
                 defender_health.health - damage, 0)
             defender_health.save()
-            # round_result = f'The {fighter.fighter_type.id=attacker} attack was successful!'
+            messages.info(request, "Attack was successful!")
         else:
             defender_health.health = min(
                 defender_health.health + recovery, 100)
             defender_health.save()
-            # round_result = f'The {fighter.fighter_type.id=defender} defense was successful!'
-            this_fight.fight_round = this_fight.fight_round + 1
+            messages.info(request, "Defense was successful!")
+        this_fight.fight_round = this_fight.fight_round + 1
         this_fight.save()
 
-        return round_result
+        return request
+
+# game models
 
 
 class Fighter(models.Model):
@@ -62,6 +143,7 @@ class Fighter(models.Model):
     recovery = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    # fighter1 and fighter2 link from ActiveFight model
     objects = FightManager()
 
     def __str__(self):
@@ -113,8 +195,8 @@ class Base(models.Model):
     base_recovery = models.IntegerField()
     base_miss = models.DecimalField(max_digits=3, decimal_places=2)
     base_damage = models.IntegerField()
-    base_parry = models.DecimalField(max_digits=3, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
+    base_parry = models.DecimalField(max_digits=3, decimal_places=2)
     updated_at = models.DateTimeField(auto_now=True)
     objects = FightManager()
 
@@ -137,3 +219,47 @@ class FightAction(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = FightManager()
+
+
+class TechniqueMod (models.Model):
+    qa_power = models.DecimalField(max_digits=2, decimal_places=2)
+    qa_speed = models.DecimalField(max_digits=2, decimal_places=2)
+    qa_attack = models.DecimalField(max_digits=2, decimal_places=2)
+    na_power = models.DecimalField(max_digits=2, decimal_places=2)
+    na_speed = models.DecimalField(max_digits=2, decimal_places=2)
+    na_attack = models.DecimalField(max_digits=2, decimal_places=2)
+    sa_power = models.DecimalField(max_digits=2, decimal_places=2)
+    sa_speed = models.DecimalField(max_digits=2, decimal_places=2)
+    sa_attack = models.DecimalField(max_digits=2, decimal_places=2)
+    dd_speed = models.DecimalField(max_digits=2, decimal_places=2)
+    dd_agility = models.DecimalField(max_digits=2, decimal_places=2)
+    dd_defense = models.DecimalField(max_digits=2, decimal_places=2)
+    nd_speed = models.DecimalField(max_digits=2, decimal_places=2)
+    nd_agility = models.DecimalField(max_digits=2, decimal_places=2)
+    nd_defense = models.DecimalField(max_digits=2, decimal_places=2)
+    cd_speed = models.DecimalField(max_digits=2, decimal_places=2)
+    cd_agility = models.DecimalField(max_digits=2, decimal_places=2)
+    cd_defense = models.DecimalField(max_digits=2, decimal_places=2)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    objects = FightManager()
+
+    def __unicode__(self):
+        return self.qa_power
+        return self.qa_speed
+        return self.qa_attack
+        return self.na_power
+        return self.na_speed
+        return self.na_attack
+        return self.sa_power
+        return self.sa_speed
+        return self.sa_attack
+        return self.dd_speed
+        return self.dd_agility
+        return self.dd_defense
+        return self.nd_speed
+        return self.nd_agility
+        return self.nd_defense
+        return self.cd_speed
+        return self.cd_agility
+        return self.cd_defense

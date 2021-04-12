@@ -7,7 +7,7 @@ from django.contrib import messages
 
 def home(request):
     context = {
-        'version': 1.1
+        'version': 1.2
     }
     return render(request, "home.html", context)
 
@@ -92,8 +92,7 @@ def fight(request):
 
 def fight_advance(request):
     round_advance = combat_models.ActiveFight.objects.round_result(
-        request.POST)
-    messages.info(request, round_advance)
+        request.POST, request)
     return redirect('/fight')
 
 
