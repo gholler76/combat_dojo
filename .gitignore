@@ -1,1 +1,7 @@
 /assets
+.vscode
+env/
+venv/
+__pycache__/
+.vscode/
+db.sqlite3
