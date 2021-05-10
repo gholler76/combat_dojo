@@ -7,7 +7,7 @@ from django.contrib import messages
 
 def home(request):
     context = {
-        'version': 2.0
+        'version': 2.1
     }
     print("IP Address for debug-toolbar: " + request.META['REMOTE_ADDR'])
     return render(request, "home.html", context)
@@ -64,6 +64,7 @@ def fight(request):
 def fight_advance(request):
     round_advance = combat_models.ActiveFight.objects.round_result(
         request.POST, request)
+    print(request.POST)
     return redirect('/fight')
 
 

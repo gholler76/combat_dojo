@@ -75,36 +75,20 @@
                 <label for="technique">
                     <h2>Choose an Attack: </h2>
                 </label>
+                <input  name="technique" type="submit" class="nes-btn is-success" value="quick"/>
+                <input  name="technique" type="submit"  class="nes-btn is-warning" value="Normal"/>
+                <input  name="technique" type="submit"  class="nes-btn is-error" value="STRONG"/>
                 <input type="hidden" name="player" value="attack">
-                <div class="nes-select is-success mb-4 tech">
-                    <select id="technique" name="technique">
-                        <option value="" disabled selected hidden>Select...</option>
-                        <option value=1>Quick</option>
-                        <option value=2>Normal</option>
-                        <option value=3>Strong</option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-4 p-0 text-center">
-                <button src="/static/img/fist.png" type="submit" class="nes-btn go-btn"></button>
             </div>
             {% else %}
             <div class="col-4 d-flex">
                 <label for="technique">
                     <h2>Choose a Defense: </h2>
                 </label>
+                <input  name="technique" type="submit" class="nes-btn is-success" value="dodge"/>
+                <input  name="technique" type="submit"  class="nes-btn is-warning" value="Block"/>
+                <input  name="technique" type="submit"  class="nes-btn is-error" value="COUNTER"/>
                 <input type="hidden" name="player" value="defense">
-                <div class="nes-select is-error mb-4 tech">
-                    <select id="technique" name="technique">
-                        <option value="" disabled selected hidden>Select...</option>
-                        <option value=1>Dodge</option>
-                        <option value=2>Block</option>
-                        <option value=3>Counter</option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-4 p-0 text-center">
-                <button src="/static/img/fist.png" type="submit" class="nes-btn go-btn"></button>
             </div>
             {% endif %}
         </form>

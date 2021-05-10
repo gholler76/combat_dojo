@@ -72,6 +72,10 @@ class FightManager (models.Manager):
         attacker = action.attacker
         player = post_data["player"]
         tech = post_data["technique"]
+        quick = "quick"
+        Normal = "Normal"
+        dodge = "dodge"
+        Block = "Block"
 
         # set technique value selected by player, assign random selection to CPU
         this_attacker = Fighter.objects.all().get(id=attacker)
@@ -105,47 +109,73 @@ class FightManager (models.Manager):
         # assign attack or defense to player, vice versa for CPU
         if player == "attack":
             attack_tech = tech
-            defense_tech = random.randint(1, 3)
-            if attack_tech == 1:
-                this_attack = math.ceil(power * qa_power + a_speed *
-                                        qa_speed + attack * qa_attack)
-            elif attack_tech == 2:
-                this_attack = math.ceil(power * na_power + a_speed *
-                                        na_speed + attack * na_attack)
+            defense_tech = Defense.objects.get(
+                id=random.randint(1, 3)).defense_type
+            if attack_tech == quick:
+                this_attack = math.ceil(
+                    power * qa_power +
+                    a_speed * qa_speed
+                    + attack * qa_attack)
+            elif attack_tech == Normal:
+                this_attack = math.ceil(
+                    power * na_power +
+                    a_speed * na_speed +
+                    attack * na_attack)
             else:
-                this_attack = math.ceil(power * sa_power + a_speed *
-                                        sa_speed + attack * sa_attack)
-            if defense_tech == 1:
-                this_defense = math.ceil(d_speed * dd_speed + agility *
-                                         dd_agility + defense * dd_defense)
-            elif defense_tech == 2:
-                this_defense = math.ceil(d_speed * nd_speed + agility *
-                                         nd_agility + defense * nd_defense)
+                this_attack = math.ceil(
+                    power * sa_power +
+                    a_speed * sa_speed +
+                    attack * sa_attack)
+            if defense_tech == dodge:
+                this_defense = math.ceil(
+                    d_speed * dd_speed +
+                    agility * dd_agility +
+                    defense * dd_defense)
+            elif defense_tech == Block:
+                this_defense = math.ceil(
+                    d_speed * nd_speed +
+                    agility * nd_agility +
+                    defense * nd_defense)
             else:
-                this_defense = math.ceil(d_speed * cd_speed + agility *
-                                         cd_agility + defense * cd_defense)
+                this_defense = math.ceil(
+                    d_speed * cd_speed +
+                    agility * cd_agility +
+                    defense * cd_defense)
         # switch player to defense if not attack
         else:
             defense_tech = tech
-            attack_tech = random.randint(1, 3)
-            if defense_tech == 1:
-                this_defense = math.ceil(d_speed * dd_speed + agility *
-                                         dd_agility + defense * dd_defense)
-            elif defense_tech == 2:
-                this_defense = math.ceil(d_speed * nd_speed + agility *
-                                         nd_agility + defense * nd_defense)
+            attack_tech = Attack.objects.get(
+                id=random.randint(1, 3)).attack_type
+            if defense_tech == dodge:
+                this_defense = math.ceil(
+                    d_speed * dd_speed +
+                    agility * dd_agility +
+                    defense * dd_defense)
+            elif defense_tech == Block:
+                this_defense = math.ceil(
+                    d_speed * nd_speed +
+                    agility * nd_agility +
+                    defense * nd_defense)
             else:
-                this_defense = math.ceil(d_speed * cd_speed + agility *
-                                         cd_agility + defense * cd_defense)
-            if attack_tech == 1:
-                this_attack = math.ceil(power * qa_power + a_speed *
-                                        qa_speed + attack * qa_attack)
-            elif attack_tech == 2:
-                this_attack = math.ceil(power * na_power + a_speed *
-                                        na_speed + attack * na_attack)
+                this_defense = math.ceil(
+                    d_speed * cd_speed +
+                    agility * cd_agility +
+                    defense * cd_defense)
+            if attack_tech == quick:
+                this_attack = math.ceil(
+                    power * qa_power +
+                    a_speed * qa_speed +
+                    attack * qa_attack)
+            elif attack_tech == Normal:
+                this_attack = math.ceil(
+                    power * na_power +
+                    a_speed * na_speed +
+                    attack * na_attack)
             else:
-                this_attack = math.ceil(power * sa_power + a_speed *
-                                        sa_speed + attack * sa_attack)
+                this_attack = math.ceil(
+                    power * sa_power +
+                    a_speed * sa_speed +
+                    attack * sa_attack)
         # after round values for att/def are established, dice roll to see who wins
         attacker_val = this_attack
         defender_val = this_defense
@@ -156,8 +186,10 @@ class FightManager (models.Manager):
         base_damage = Base.objects.get(id=1).base_damage
         base_parry = Base.objects.get(id=1).base_parry
         # load techniques used in the round
-        damage_mod = Attack.objects.get(id=attack_tech).damage_mod
-        recovery_mod = Defense.objects.get(id=defense_tech).recovery_mod
+        damage_mod = Attack.objects.get(
+            attack_type=str(attack_tech)).damage_mod
+        recovery_mod = Defense.objects.get(
+            defense_type=str(defense_tech)).recovery_mod
         # apply modifiers to base damage and recovery values based on who won the roll
         r_max = 20
         defender_recovery = this_defender.recovery
@@ -225,8 +257,6 @@ class Attack(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = FightManager()
-
-# this model will feed the roll for first attack
 
 
 class FirstAttack(models.Model):
