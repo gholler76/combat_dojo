@@ -1,20 +1,21 @@
-#	COMBAT DOJO! - current ver 2.1
+#	COMBAT DOJO!
+current ver 2.1
 
 ##	ABOUT THE GAME:
 Combat Dojo is a turn-based combat game pitting some of history's most feared warriors against each other. Oh, and Caillou is one of those warriors. Yup...
 
-## ABOUT THE WARRIORS:
+## 	ABOUT THE WARRIORS:
 **Each warrior is rated on a scale of 1-20 in the following attributes:**\
-	**PWR: Power** - the strength of an attack, a factor in total damage inflicted if the attack succeeds.\
-	**SPD: Speed** - the speed of an attack or defense, a factor in the success of each.\
-  **AGL: Agility** - the fighter's agility, a factor in how well the fighter can avoid attacks.\
-  **ATT: Attack** - the overall quality of a fighter's attack, like accuracy. Largest factor in the success of attacks.\
-  **DEF: Defense** - the overall quality of a fighter's defense. Largest factor in the success of defenses.\
-  **RCV: Recovery** - the rate at which a fighter recovers health during a fight if an attack is defended successfully.\
+	**PWR: Power** - The strength of an attack, a factor in total damage inflicted if the attack succeeds.\
+	**SPD: Speed** - The speed of an attack or defense, a factor in the success of each.\
+	**AGL: Agility** - The fighter's agility, a factor in how well the fighter can avoid attacks.\
+	**ATT: Attack** - The overall quality of a fighter's attack, like accuracy. Largest factor in the success of attacks.\
+	**DEF: Defense** - The overall quality of a fighter's defense. Largest factor in the success of defenses.\
+	**RCV: Recovery** - The rate at which a fighter recovers health during a fight if an attack is defended successfully.\
 
 Together, these attributes make up the core of each fighter's unique combat profile.
 
-## PLAYING THE GAME:
+## 	PLAYING THE GAME:
 After selecting your fighter and your opponent, you enter the dojo to begin battle. A radmon event selected the first to attack, and then fighters take turns attacking or defending until one player runs out of health -or- 40 rounds have elapsed. Aa that point, the fighter with the most health wins.
 
 **When attacking, the player chooses one of three techinques:**\
@@ -29,16 +30,16 @@ After selecting your fighter and your opponent, you enter the dojo to begin batt
 	
 The CPU chooses their technique randomly right now. A future feature is planned to tailor the CPU choice based on their profile.
 
-## FEATURES IN PROGRESS:
+## 	FEATURES IN PROGRESS:
 **MISS LOGIC** - A base miss % for every attack, which will be modified according to attack technique, defense technique and fighter profiles.\
 **COUNTER/PARRY LOGIC** - On a successful counter, the defender will gain a percentage of health, while also inflicting damage to the attacker commensurate attack techinque.\
 
-## PLANNED FEATURES:
+## 	PLANNED FEATURES:
 **DYNAMIC HEALTH BAR** - Replacement for the numerical indicator.\
 **CPU TECHNIQUE SELECTION** - Logic that will incorporate the CPU fighter's profile in their techinque choices.\
 **RANDOM OPPONENT SELECTION** - Let the CPU pick its fighter.\
 
-## STRETCH FEATURES AND UPGRADES:
+## 	STRETCH FEATURES AND UPGRADES:
 **SELECT FIGHTER UPGRADE** - Select fighter by cliking on fighter card, with click and hover effects.\
 **ROUND RESULTS UPGRADE** - Add more phrases and terminology for describing round results to add unique flavor to each fight.\
 **SOUND EFFECTS** - Add sounds to all button presses, each round of battle, background menu music, etc.\
