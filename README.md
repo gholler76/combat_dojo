@@ -49,4 +49,4 @@ The CPU chooses their technique randomly right now. A future feature is planned 
 **SPECIAL ABILITIES** - Rewards for conecutive round wins that can be saved and used for one round for an immmense advantage.\
 **FIGHT STATS** - An end of mathc breakdown showing all relevant stats from the fight.\
 **LOGIN/REG** - For stat-tracking and eventual co-op.\
-**CO-OP - Take on your friends from anywhere in the world in a Player-v-Player battle.
+**CO-OP** - Take on your friends from anywhere in the world in a Player-v-Player battle.
