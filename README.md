@@ -45,7 +45,7 @@ The CPU chooses their technique randomly right now. A future feature is planned 
 **CAMPAIGN MODE** - Street Fighter 2-type campaign which pits you against each fighter on your way to becoming the champion of Combat Dojo.\
 **RETRO CABINET FRAMING** - Wrap game screens in an bezel-and-cabinet frame with CRT curve and scanlines for real retro vibes.\
 **TECHNIQUE HEALTH IMPACT** - Decrease health proportionally to the techinque chosen, with modifiers for consecutive use of the same technique.\
-**SPECIAL ABILITIES** - Rewards for conecutive round wins that can be saved and used for one round for an immmense advantage.
-**FIGHT STATS** - An end of mathc breakdown showing all relevant stats from the fight.
-**LOGIN/REG** - For stat-tracking and eventual co-op.
+**SPECIAL ABILITIES** - Rewards for conecutive round wins that can be saved and used for one round for an immmense advantage.\
+**FIGHT STATS** - An end of mathc breakdown showing all relevant stats from the fight.\
+**LOGIN/REG** - For stat-tracking and eventual co-op.\
 **CO-OP - Take on your friends from anywhere in the world in a Player-v-Player battle.
