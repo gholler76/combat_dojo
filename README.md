@@ -25,7 +25,7 @@ After selecting your fighter and your opponent, you enter the dojo to begin batt
 **When defending, the player chooses one of three techniques:**\
 	**DODGE** - A quick move that favors speed and agility over defense.\
 	**BLOCK** - A standard move hat blocks the attack, favoring defense and speed over agaility.\
-	**COUNTER** - An advanced technique that blends defense evenly with speed and ability. A successful counter will also inflict damage to the attacker. (In a future update.. :))\
+	**COUNTER** - An advanced technique that blends defense evenly with speed and ability. A successful counter will also inflict damage to the attacker. (In a future update.. :))
 	
 The CPU chooses their technique randomly right now. A future feature is planned to tailor the CPU choice based on their profile.
 
