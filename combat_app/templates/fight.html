@@ -39,7 +39,7 @@
                     <h3 class="fight">{{fight.fighter1.fighter_type}}</h3>
                 </div>
                 <div class="card-body fight d-flex align-items-center justify-content-center">
-                    <h6>{{health_fighter1.health}}</h6>
+                    <progress class="nes-progress is-success" value="{{health_fighter1.health}}" max="100"></progress>
                 </div>
             </div>
         </div>
@@ -61,7 +61,7 @@
                     <h3 class="fight">{{fight.fighter2.fighter_type}}</h3>
                 </div>
                 <div class="card-body fight d-flex align-items-center justify-content-center">
-                    <h6>{{health_fighter2.health}}</h6>
+                    <progress class="nes-progress is-success" value="{{health_fighter2.health}}" max="100"></progress>
                 </div>
             </div>
         </div>
@@ -75,9 +75,9 @@
                 <label for="technique">
                     <h2>Choose an Attack: </h2>
                 </label>
-                <input  name="technique" type="submit" class="nes-btn is-success" value="quick"/>
-                <input  name="technique" type="submit"  class="nes-btn is-warning" value="Normal"/>
-                <input  name="technique" type="submit"  class="nes-btn is-error" value="STRONG"/>
+                <input name="technique" type="submit" class="nes-btn is-success" value="quick" />
+                <input name="technique" type="submit" class="nes-btn is-warning" value="Normal" />
+                <input name="technique" type="submit" class="nes-btn is-error" value="STRONG" />
                 <input type="hidden" name="player" value="attack">
             </div>
             {% else %}
@@ -85,9 +85,9 @@
                 <label for="technique">
                     <h2>Choose a Defense: </h2>
                 </label>
-                <input  name="technique" type="submit" class="nes-btn is-success" value="dodge"/>
-                <input  name="technique" type="submit"  class="nes-btn is-warning" value="Block"/>
-                <input  name="technique" type="submit"  class="nes-btn is-error" value="COUNTER"/>
+                <input name="technique" type="submit" class="nes-btn is-success" value="dodge" />
+                <input name="technique" type="submit" class="nes-btn is-warning" value="Block" />
+                <input name="technique" type="submit" class="nes-btn is-error" value="COUNTER" />
                 <input type="hidden" name="player" value="defense">
             </div>
             {% endif %}
