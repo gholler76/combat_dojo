@@ -1,5 +1,5 @@
 #	COMBAT DOJO!
-current ver 2.1
+current ver 2.3
 
 ##	ABOUT THE GAME:
 Combat Dojo is a turn-based combat game pitting some of history's most feared warriors against each other. Oh, and Caillou is one of those warriors. Yup...

@@ -7,7 +7,7 @@ from django.contrib import messages
 
 def home(request):
     context = {
-        'version': 2.1
+        'version': 2.3
     }
     print("IP Address for debug-toolbar: " + request.META['REMOTE_ADDR'])
     return render(request, "home.html", context)
