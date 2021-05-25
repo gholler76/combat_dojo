@@ -35,7 +35,6 @@ The CPU chooses their technique randomly right now. A future feature is planned 
 **COUNTER/PARRY LOGIC** - On a successful counter, the defender will gain a percentage of health, while also inflicting damage to the attacker commensurate attack techinque.\
 
 ## 	PLANNED FEATURES:
-**DYNAMIC HEALTH BAR** - Replacement for the numerical indicator.\
 **CPU TECHNIQUE SELECTION** - Logic that will incorporate the CPU fighter's profile in their techinque choices.\
 **RANDOM OPPONENT SELECTION** - Let the CPU pick its fighter.\
 
